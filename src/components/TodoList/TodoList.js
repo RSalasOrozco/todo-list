@@ -10,17 +10,20 @@ export default function TodoList() {
   const [newTask, setNewTask] = useState("");
   // Estado para almacenar la fecha de la tarea
   const [newDate, setNewDate] = useState("");
+  // Estado para almacenar la hora de la tarea
+  const [newTime, setNewTime] = useState("");
   // Estado para editar una tarea
   const [editIndex, setEditIndex] = useState(null); // Índice de la tarea en edición
   const [editTask, setEditTask] = useState(""); // Texto de la tarea en edición
   const [editDate, setEditDate] = useState(""); // Fecha de la tarea en edición
-
+  const [editTime, setEditTime] = useState(""); // Hora de la tarea en edición
   // Función para agregar una nueva tarea
   const addTask = () => {
     if (newTask.trim() !== "" && newDate !== "") {
-      setTasks([...tasks, { task: newTask, date: newDate }]); // Agrega la nueva tarea con fecha
+      setTasks([...tasks, { task: newTask, date: newDate, time: newTime }]); // Agrega la nueva tarea con fecha
       setNewTask(""); // Limpia el campo de entrada
       setNewDate(""); // Limpia el campo de fecha
+      setNewTime(""); // Limpia el campo de hora
     }
   };
 
@@ -35,18 +38,22 @@ export default function TodoList() {
     setEditIndex(index); // Establece el índice de la tarea en edición
     setEditTask(tasks[index].task); // Establece el texto de la tarea en edición
     setEditDate(tasks[index].date); // Establece la fecha de la tarea en edición
+    setEditTime(tasks[index].time); // Establece la hora de la tarea en edición
   };
 
   // Función para guardar los cambios de la edición
   const saveEdit = () => {
     if (editTask.trim() !== "" && editDate !== "") {
       const updatedTasks = tasks.map((task, i) =>
-        i === editIndex ? { task: editTask, date: editDate } : task
-      ); // Actualiza la tarea editada
+        i === editIndex
+          ? { task: editTask, date: editDate, time: editTime }
+          : task
+      ); // Actualiza la tarea con la hora de edición
       setTasks(updatedTasks); // Actualiza el estado
       setEditIndex(null); // Termina la edición
       setEditTask(""); // Limpia el campo de edición
       setEditDate(""); // Limpia el campo de fecha de edición
+      setEditTime(""); // Limpia el campo de hora de edición
     }
   };
 
@@ -73,6 +80,12 @@ export default function TodoList() {
           onChange={(e) => setNewDate(e.target.value)}
           className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+        <input
+          type="time"
+          value={newTime}
+          onChange={(e) => setNewTime(e.target.value)}
+          className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
         <button
           onClick={addTask}
           className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -88,10 +101,12 @@ export default function TodoList() {
             key={index}
             className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm"
           >
-            {/* Tarea y fecha */}
+            {/* Tarea, fecha y hora de la tarea */}
             <div className="flex-1">
               <span className="text-gray-800">{task.task}</span>
-              <span className="block text-sm text-gray-500">{task.date}</span>
+              <span className="block text-sm text-gray-500">
+                {task.date} - {task.time}
+              </span>
             </div>
 
             {/* Botones de editar y eliminar */}
@@ -132,6 +147,12 @@ export default function TodoList() {
               type="date"
               value={editDate}
               onChange={(e) => setEditDate(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              type="time"
+              value={editTime}
+              onChange={(e) => setEditTime(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
